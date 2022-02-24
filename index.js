@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+//USE Commands!!
 app.use(bodyParser.json());
 app.use(methodOverride());
 
@@ -21,11 +22,11 @@ app.use(express.static('public'));
 
 //Get Commands!
 app.get('/', (req, res) => {
-  res.send('Welcome to my app!');
+  res.send('Welcome to my movie app!');
 });
 
-app.get('/secreturl', (req, res) => {
-  res.send('This is a secret url with super top-secret content.');
+app.get('/documentation', (req, res) => {
+  res.sendFile('public/documentation.html', {root: __dirname});
 });
 
 
