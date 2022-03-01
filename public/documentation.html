@@ -7,6 +7,41 @@
     <title>Document for Api</title>
 </head>
 <body>
-    <P>Hi there, this is the documentation for my api app! This is the beginning of the document. Not much on here now, but, it will eventually have notes on how to use my api and app!</P>
+    <P>Hi there, this is the documentation for my api app! The goal of this project is to build the server side API of a movies web application. The App will provide users with information about different movies, directors, and genres. Then the users will be able to sign up, update their personal information, and create a list of their favorite movies.</P>
+    <table>
+        <tr>
+            <th>Request</th>
+            <th>URL</th>
+            <th>Request Parameter</th>
+            <th>HTTP Response Method</th>
+            <th>Response </th>
+        </tr>
+        <tr>
+            <td>Returns a list of all movies to the user</td>
+            <td>"/movies"</td>
+            <td>none</td>
+            <td>GET: <br> Example: app.get("/movies", (req,res) =>{})</td>
+            <td>
+                A json object holding data about all the movies <br>
+                Example: {Title: "Slap Shot", Description: ""},
+                Director: {Name: "George Roy Hill", Bio: ""}, 
+                Genre: {Name: "Comedy", Description: ""}
+            </td>
+        </tr>
+        <tr>
+            <td>Returns the data about a director by name</td>
+            <td>"/movies/directors/:name</td>
+            <td>GET: <br> Example: app.get("/movies/director/:name", (req,res) => {})</td>
+            <td>
+                A JSON object holding data about a director <br>
+                Example: Director: (Name: "George Roy Hill", Bio:""),
+            </td>
+        </tr>
+        <td>Get the description of the Genre</td>
+        <td>/genre/:name</td>
+        <td>Get</td>
+        <td>A Json object that will hold the description of the genre!</td>
+    </table>
+
 </body>
 </html>
