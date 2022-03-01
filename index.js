@@ -7,6 +7,21 @@ const bodyParser = require('body-parser'),
   methodOverride = require('method-override');
 const { rest, bindAll } = require('lodash');
 
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+//USE Commands!!
+app.use(bodyParser.json());
+app.use(methodOverride());
+
+app.use((err, req, res, next) => {
+  // logic
+});
+
+app.use(morgan('common'));
+app.use(express.static('public'));
+
 
 let users = [
   {
@@ -88,27 +103,70 @@ app.post('/users', (req, res) => {
   if (newUser.name) {
     newUser.id = uuid.v4();
     users.push(newUser);
-    res.status(201).json(newUser)
+    res.status(201).json(newUser);
   } else {
-    res.status(400).send('users need names')
-  }
-})
-
-
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
-//USE Commands!!
-app.use(bodyParser.json());
-app.use(methodOverride());
-
-app.use((err, req, res, next) => {
-  // logic
+    const message = 'Missing username in request body';
+    res.status(400).send(message);
+  };
 });
 
-app.use(morgan('common'));
-app.use(express.static('public'));
+//Update!!
+app.put('/users/:id', (req, res) => {
+  const  { id } = req.params;
+  const updateUser = req.body;
+
+  let user = users.find( user => user.id == id);
+
+  if (user) {
+    user.name = updateUser.name;
+    res.status(200).json(user);
+  } else {
+    res.status(400).send('No such user');
+  }
+});
+
+//POST!
+app.post('/users/:id/:movieTitle', (req, res) => {
+  const  { id, movieTitle } = req.params;
+  
+  let user = users.find( user => user.id == id);
+
+  if (user) {
+    user.favoriteMovies.push(movieTitle);
+    res.status(200).send(`${movieTitle} has been added to user ${id}'s array`);
+  } else {
+    res.status(400).send('No such user');
+  }
+});
+
+//DELETE!!
+app.delete('/users/:id/:movieTitle', (req, res) => {
+  const {id, movieTitle} =req.params;
+
+  let user = users.find( user => user.id == id);
+
+  if(user) {
+    user.favoriteMovies = user.favoriteMovies.filter(title => title !== movieTitle);
+    res.status(200).send(`The ${movieTitle} has been removed from user ${id}'s array`);
+  } else {
+    res.status(400).send('No such user')
+  }
+});
+
+//This allows people to removed or deregister from the app
+app.delete('/users/:id/', (req, res) => {
+  const { id } =req.params;
+
+  let user = users.find( user => user.id == id);
+
+  if(user) {
+    users = users.filter(user => user.id != id);
+    res.status(200).send(` user ${id}'s has been deleted`);
+  } else {
+    res.status(400).send('No such user')
+  }
+});
+
 
 //Get Commands!
 app.get('/', (req, res) => {
