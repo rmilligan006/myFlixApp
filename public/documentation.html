@@ -20,7 +20,7 @@
             <td>Returns a list of all movies to the user</td>
             <td>"/movies"</td>
             <td>none</td>
-            <td>GET: <br> Example: app.get("/movies", (req,res) =>{})</td>
+            <td>GET: Example: app.get("/movies", (req,res) =>{})</td>
             <td>
                 A json object holding data about all the movies <br>
                 Example: {Title: "Slap Shot", Description: ""},
@@ -31,14 +31,14 @@
         <tr>
             <td>Returns the data about a director by name</td>
             <td>"/movies/directors/:name</td>
-            <td>GET: <br> Example: app.get("/movies/director/:name", (req,res) => {})</td>
+            <td>GET: Example: app.get("/movies/director/:name", (req,res) => {})</td>
             <td>
                 A JSON object holding data about a director <br>
                 Example: Director: (Name: "George Roy Hill", Bio:""),
             </td>
         </tr>
         <td>Get the description of the Genre</td>
-        <td>/genre/:name</td>
+        <td>/movies/genre/:name</td>
         <td>Get</td>
         <td>A Json object that will hold the description of the genre!</td>
     </table>
