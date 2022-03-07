@@ -5,44 +5,194 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../src/styles.css">
-    <title>Document for Api</title>
+    <title>Document for myFlixDB</title>
 </head>
-<body>
-    <P>Hi there, this is the documentation for my api app! The goal of this project is to build the server side API of a movies web application. The App will provide users with information about different movies, directors, and genres. Then the users will be able to sign up, update their personal information, and create a list of their favorite movies.</P>
-    <table>
-        <tr>
-            <th>Request</th>
-            <th>URL</th>
-            <th>Request Parameter</th>
-            <th>HTTP Response Method</th>
-            <th>Response </th>
-        </tr>
-        <tr>
-            <td>Returns a list of all movies to the user</td>
-            <td>"/movies"</td>
-            <td>none</td>
-            <td>GET: Example: app.get("/movies", (req,res) =>{})</td>
-            <td>
-                A json object holding data about all the movies <br>
-                Example: {Title: "Slap Shot", Description: ""},
-                Director: {Name: "George Roy Hill", Bio: ""}, 
-                Genre: {Name: "Comedy", Description: ""}
-            </td>
-        </tr>
-        <tr>
-            <td>Returns the data about a director by name</td>
-            <td>"/movies/directors/:name</td>
-            <td>GET: Example: app.get("/movies/director/:name", (req,res) => {})</td>
-            <td>
-                A JSON object holding data about a director <br>
-                Example: Director: (Name: "George Roy Hill", Bio:""),
-            </td>
-        </tr>
-        <td>Get the description of the Genre</td>
-        <td>/movies/genre/:name</td>
-        <td>Get</td>
-        <td>A Json object that will hold the description of the genre!</td>
-    </table>
+<table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th scope="col">Business Logic</th>
+        <th scope="col">URL</th>
+        <th scope="col">HTTP Method</th>
+        <th scope="col">Query parameters</th>
+        <th scope="col">Request body data format</th>
+        <th scope="col">Response body data format</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Return a list of ALL movies to the user</td>
+        <td>/movies</td>
+        <td>GET</td>
+        <td>None</td>
+        <td>None</td>
+        <td>A JSON object holding data about all movies</td>
+      </tr>
+      <tr>
+        <td>Return data about a single movie by title to the user</td>
+        <td>/movies/[title]</td>
+        <td>GET</td>
+        <td>:title</td>
+        <td>None</td>
+        <td>A JSON object holding data about the selected movie containing description, genre, director and img URL. Example: 
+          <pre>
+            <code>
+  {
+    Title: '', 
+    Description: '',
+    Year: '', 
+    Genre: {
+      name: '',
+      description: ''
+    } 
+    Director: {
+      name: '', 
+      birth: '',
+      death: ''
+      bio: ''
+    },
+    Actors: {
 
-</body>
+    }
+    ImagePath: ''
+    Featured: true
+  }
+            </code>
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>Return data about a genre (description) by name/title (e.g., “Thriller”)</td>
+        <td>/movies/genres/[genre]</td>
+        <td>GET</td>
+        <td>:genre</td>
+        <td>None</td>
+        <td>A JSON object holding data about the selected genre. Example:
+          <pre>
+            <code>
+  { 
+    name: 'Comedy', 
+    description: '', 
+  }
+            </code>
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>Return data about a director (bio, birth year, death year) by name</td>
+        <td>/movies/directors/[name]</td>
+        <td>GET</td>
+        <td>:name</td>
+        <td>None</td>
+        <td>A JSON object holding data about the selected director. Example: 
+          <pre>
+            <code>
+  { 
+    name: 'Peter Jackson', 
+    birth: '1961', 
+    death: '-',
+    bio: ''
+  }
+            </code>
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>Allow new users to register</td>
+        <td>/users</td>
+        <td>POST</td>
+        <td>None</td>
+        <td>A JSON object holding data about the user to add. Example: 
+          <pre>
+            <code>
+                { 
+                    id: '1',
+                    username: 'DirtyDan', 
+                    email: 'DirtyD123@gmail.com', 
+                    password: 'And-the-boys'
+                    birthday: '12/09/1994', 
+                    favorites: [
+                      'The Departed', 'Blues Brothers'
+                    ] 
+                  }
+            </code>
+          </pre>
+        </td>
+        <td>A JSON object holding data about added user including ID. Example:
+          <pre>
+            <code>
+                { 
+                    id: '1',
+                    username: 'DirtyDan', 
+                    email: 'DirtyD123@gmail.com', 
+                    password: 'And-the-boys'
+                    birthday: '12/09/1994', 
+                    favorites: [
+                      'The Departed', 'Blues Brothers'
+                    ] 
+                  }
+            </code>
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>Allow users to update their user info (username)</td>
+        <td>/users/[username]</td>
+        <td>PUT</td>
+        <td>:username</td>
+        <td> A JSON object holding the new username. Example:
+          <pre>
+            <code>
+  { 
+    "username": "DirtyD123"
+  }
+            </code>
+          </pre>
+        </td>
+        <td>A JSON object with the updated user profile. Example:
+          <pre>
+            <code>
+  { 
+    id: '1',
+    username: 'Dirtyd123', 
+    email: 'DirtyD123@gmail.com', 
+    password: 'And-the-boys'
+    birthday: '12/09/1994', 
+    favorites: [
+      'The Departed', 'Blues Brothers'
+    ] 
+  }
+            </code>
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>Allow users to add a movie to their list of favorites</td>
+        <td>/users/[username]/[movie]</td>
+        <td>POST</td>
+        <td>:username, :movie</td>
+        <td>None</td>
+        <td>A text message indicating the movie was added</td>
+      </tr>
+      <tr>
+        <td>Allow users to remove a movie from their list of favorites</td>
+        <td>/users/[username]/[movie]</td>
+        <td>DELETE</td>
+        <td>:username, :movie</td>
+        <td>None</td>
+        <td>A text message indicating the movie was deleted</td>
+      </tr>
+      <tr>
+        <td>Allow existing users to deregister</td>
+        <td>/users/[username]</td>
+        <td>DELETE</td>
+        <td>:username</td>
+        <td>None</td>
+        <td>A message indicating the user was deregistered</td>
+      </tr>
+    </tbody>
+    </table>
+    
+  
+  </body>
+
 </html>

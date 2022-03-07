@@ -1,12 +1,20 @@
-const express = require('express'),
+const express = require('express');
   morgan = require('morgan');
-
-const app = express();
-const bodyParser = require('body-parser'),
-  uuid = require('uuid');
-  methodOverride = require('method-override');
+  const app = express();
+//bodyParser, and uuid calls
+const bodyParser = require('body-parser');
+uuid = require('uuid');
+methodOverride = require('method-override');
 const { rest, bindAll } = require('lodash');
 
+//exporting of the mongoose!
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+const Movies = Models.movie;
+const Users = Models.user;
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+//USE, GET, POST, DELETE methods
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -23,95 +31,37 @@ app.use(morgan('common'));
 app.use(express.static('public'));
 
 
-let users = [
-  {
-    id: 1,
-    name: "Bill",
-    favoriteMovies: []
-  },
-  {
-    id: 2,
-    name: "Bruce",
-    favoriteMovies: ["Blues Brothers"]
-  }
-]
 
-  let topMovies = [ // A small list of favourite movies
-    {
-      title: "Blues Brothers",
-      Director: {
-        Name: "John Landis"
-      },
-      Genre: {
-        Name: "comedy",
-        description: "Movies to make you laugh and feel happy"
-      }
-    },
-    {
-      title: "The Godfather",
-      director: "Francis Ford Coppola",
-      genre:"Crime-drama"
-    },
-    {
-      title: "The Departed",
-      Director: "Martin Scorsese",
-      genre:"Crime-drama"
-    },
-    {
-      title: "Rush Hour 2",
-      director: "Brett Ratner",
-      genre:"Comedy"
-    },
-    {
-      title: "Gran Torino",
-      director: "Clint Eastwood",
-      genre:"drama-thriller"
-    },
-    {
-      title: "John Wick",
-      Director: "Chad Stahelski",
-      genre:"Action"
-    },
-    {
-      title: "300",
-      Director: "Zack Snyder",
-      genre:"Action"
-    },
-    {
-      title: "Slap Shot",
-      Director: "Geroge Roy Hill",
-      genre:"Comedy"
-
-    },
-    {
-      title: "Goon",
-      Director: "Michael Dowse",
-      genre:"Comedy"
-    },
-    {
-      title: "The Rocket",
-      Director: "Charles Biname",
-      genre:"drama"
-    }
-
-  ];
 
 // Create!
 app.post('/users', (req, res) => {
-  const newUser = req.body;
-
-  if (newUser.name) {
-    newUser.id = uuid.v4();
-    users.push(newUser);
-    res.status(201).json(newUser);
-  } else {
-    const message = 'Missing username in request body';
-    res.status(400).send(message);
-  };
+  users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + 'already exists');
+      } else {
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) =>{res.status(201).json(user) })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error: ' + error);
+        })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
 });
 
 //Update!!
-app.put('/users/:id', (req, res) => {
+app.put('/users/:Username', (req, res) => {
   const  { id } = req.params;
   const updateUser = req.body;
 
@@ -126,7 +76,7 @@ app.put('/users/:id', (req, res) => {
 });
 
 //POST!
-app.post('/users/:id/:movieTitle', (req, res) => {
+app.post('/users/:Username/:movieTitle', (req, res) => {
   const  { id, movieTitle } = req.params;
   
   let user = users.find( user => user.id == id);
@@ -140,7 +90,7 @@ app.post('/users/:id/:movieTitle', (req, res) => {
 });
 
 //DELETE!!
-app.delete('/users/:id/:movieTitle', (req, res) => {
+app.delete('/users/:Username/:movieTitle', (req, res) => {
   const {id, movieTitle} =req.params;
 
   let user = users.find( user => user.id == id);
@@ -154,7 +104,7 @@ app.delete('/users/:id/:movieTitle', (req, res) => {
 });
 
 //This allows people to removed or deregister from the app
-app.delete('/users/:id/', (req, res) => {
+app.delete('/users/:Username/', (req, res) => {
   const { id } =req.params;
 
   let user = users.find( user => user.id == id);
@@ -224,3 +174,7 @@ app.get('/movies/director/:directorName', (req, res) => {
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
 });
+
+
+
+//mongodb name
