@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const Movies = Models.movie;
 const Users = Models.user;
-mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/myFlixApp', { useNewUrlParser: true, useUnifiedTopology: true });
 
 //USE, GET, POST, DELETE methods
 app.use(bodyParser.urlencoded({
@@ -35,7 +35,7 @@ app.use(express.static('public'));
 
 // Create!
 app.post('/users', (req, res) => {
-  users.findOne({ Username: req.body.Username })
+  Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
         return res.status(400).send(req.body.Username + 'already exists');
@@ -61,7 +61,7 @@ app.post('/users', (req, res) => {
 });
 
 //Update!!
-app.put('/users/:Username', (req, res) => {
+app.put('/users/:id', (req, res) => {
   const  { id } = req.params;
   const updateUser = req.body;
 
@@ -76,7 +76,7 @@ app.put('/users/:Username', (req, res) => {
 });
 
 //POST!
-app.post('/users/:Username/:movieTitle', (req, res) => {
+app.post('/users/:id/:movieTitle', (req, res) => {
   const  { id, movieTitle } = req.params;
   
   let user = users.find( user => user.id == id);
@@ -90,7 +90,7 @@ app.post('/users/:Username/:movieTitle', (req, res) => {
 });
 
 //DELETE!!
-app.delete('/users/:Username/:movieTitle', (req, res) => {
+app.delete('/users/:id/:movieTitle', (req, res) => {
   const {id, movieTitle} =req.params;
 
   let user = users.find( user => user.id == id);
@@ -104,7 +104,7 @@ app.delete('/users/:Username/:movieTitle', (req, res) => {
 });
 
 //This allows people to removed or deregister from the app
-app.delete('/users/:Username/', (req, res) => {
+app.delete('/users/:id/', (req, res) => {
   const { id } =req.params;
 
   let user = users.find( user => user.id == id);
@@ -164,7 +164,7 @@ app.get('/movies/director/:directorName', (req, res) => {
   } else {
     res.status(400).send('no such director!')
   }
-})
+});
 
 
 
