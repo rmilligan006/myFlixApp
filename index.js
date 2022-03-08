@@ -2,7 +2,7 @@ const express = require('express');
   morgan = require('morgan');
   const app = express();
 //bodyParser, and uuid calls
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser'),
 uuid = require('uuid');
 methodOverride = require('method-override');
 const { rest, bindAll } = require('lodash');
@@ -31,6 +31,11 @@ app.use((err, req, res, next) => {
 app.use(morgan('common'));
 app.use(express.static('public'));
 
+app.use(bodyParser.urlencoded({ extended: true }));
+let auth = require('./auth.js')(app);
+
+const passport = require('passport');
+require('./passport.js');
 
 
 
@@ -48,7 +53,7 @@ app.post('/users', (req, res) => {
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
-          .then((users) =>{res.status(201).json(users) })
+          .then((user) =>{res.status(201).json(user) })
         .catch((error) => {
           console.error(error);
           res.status(500).send('Error: ' + error);
@@ -59,7 +64,7 @@ app.post('/users', (req, res) => {
       console.error(error);
       res.status(500).send('Error: ' + error);
     });
-})
+});
 
 //Adding a movie to the users list of favourites!
 app.post('/users/:Username/movies/:MovieID', (req, res) => {
@@ -116,7 +121,7 @@ app.put('/users/:Username', (req, res) => {
 
 //This allows people to removed or deregister from the app
 // Delete a user by username
-app.delete('/users/:Username', (req, res) => {
+app.delete('/users/:Username/', (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
@@ -143,7 +148,7 @@ app.get('/documentation', (req, res) => {
 });
 
 //READ!!!
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(200).json(movies);
