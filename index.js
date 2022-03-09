@@ -42,8 +42,8 @@ require('./passport.js');
 // Create!
 app.post('/users', (req, res) => {
   Users.findOne({ Username: req.body.Username })
-    .then((user) => {
-      if (user) {
+    .then((users) => {
+      if (users) {
         return res.status(400).send(req.body.Username + 'already exists');
       } else {
         Users
@@ -53,7 +53,7 @@ app.post('/users', (req, res) => {
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
-          .then((user) =>{res.status(201).json(user) })
+          .then((users) =>{res.status(201).json(users) })
         .catch((error) => {
           console.error(error);
           res.status(500).send('Error: ' + error);
@@ -81,8 +81,7 @@ app.post('/users/:Username/movies/:MovieID', (req, res) => {
     }
   });
 });
-
-//Update!!
+//Update!! allow users to update their profile
 app.put('/users/:Username', (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
     {
@@ -107,17 +106,17 @@ app.put('/users/:Username', (req, res) => {
 
 //DELETE!!
  app.delete('/users/:Username/:movies/:MovieID', (req, res) => {
-  Users.findOneAndUpdate({ Username : req.params.Username}, //Finds the user by Username
-    {$pull: {FavouriteMovies: req.params.MovieID}},
-    {new : true}) 
+  Users.findOneAndUpdate({Username : req.params.Username}, // Find user by username
+    {$pull: { FavoriteMovies: req.params.MovieID}}, // Remove movie from the list
+    { new : true }) // Return the updated document
     .then((updatedUser) => {
-      res.json(updatedUser);
+        res.json(updatedUser); // Return json object of updatedUser
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: ' + err)
-    })
-}); 
+      res.status(500).send('Error: ' + err);
+    });
+});
 
 //This allows people to removed or deregister from the app
 // Delete a user by username
@@ -148,7 +147,7 @@ app.get('/documentation', (req, res) => {
 });
 
 //READ!!!
-app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/movies', (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(200).json(movies);
