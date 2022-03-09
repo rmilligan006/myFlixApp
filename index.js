@@ -180,6 +180,17 @@ app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) =>
     });
 });
 
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Movies.findOne({ Title: req.params.Title })
+    .then ((movie) => {
+      res.json(movie);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+})
+
 app.get('/movies/genre/:genreName', passport.authenticate('jwt', {session: false}), (req, res) => {
   Movies.findOne({ 'Genre.name': req.params.Name})
   .then((movies) => {
