@@ -14,7 +14,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 const { check, validationResult } = require('express-validator');
 //mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect('mongodb+srv://process.env.CONNECTION_URI', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://process.env.CONNECTION_URI', { useNewUrlParser: true, useUnifiedTopology: true });
 
 //USE, GET, POST, DELETE methods
 app.use(bodyParser.urlencoded({
@@ -64,8 +64,8 @@ app.post('/users',
 
     let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
-      .then((users) => {
-        if (users) {
+      .then((user) => {
+        if (user) {
           //If the user is found, send a response that it already exists
           return res.status(400).send(req.body.Username + ' already exists');
         } else {
@@ -76,7 +76,7 @@ app.post('/users',
               Email: req.body.Email,
               Birthday: req.body.Birthday
             })
-            .then((users) => { res.status(201).json(users) })
+            .then((user) => { res.status(201).json(user) })
             .catch((error) => {
               console.error(error);
               res.status(500).send('Error: ' + error);
