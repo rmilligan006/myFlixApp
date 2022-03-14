@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require('express'),
   morgan = require('morgan');
   const app = express();
 //bodyParser, and uuid calls
 const bodyParser = require('body-parser'),
 uuid = require('uuid');
 methodOverride = require('method-override');
-const { rest, bindAll } = require('lodash');
+
 
 //exporting of the mongoose!
 const mongoose = require('mongoose');
@@ -17,9 +17,6 @@ const { check, validationResult } = require('express-validator');
 mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //USE, GET, POST, DELETE methods
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 
 //USE Commands!!
 app.use(bodyParser.json());
@@ -34,7 +31,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 const cors = require('cors');
 app.use(cors());
-let auth = require('./auth')(app);
+require('./auth')(app);
 const passport = require('passport');
 require('./passport.js');
 
@@ -149,7 +146,7 @@ app.delete('/users/:Username/', passport.authenticate('jwt', {session: false}), 
       if (!user) {
         res.status(400).send(req.params.Username + ' was not found');
       } else {
-        res.status(200).send(req.params.Username + ' was deleted.');
+        res.status(204).end
       }
     })
     .catch((err) => {
@@ -173,7 +170,7 @@ app.get('/documentation', (req, res) => {
 app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) => {
   Movies.find()
     .then((movies) => {
-      res.status(200).json(movies);
+      res.json(movies);
     })
     .catch((err) => {
       res.status(500).send('Error: '+ err);
@@ -195,35 +192,35 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', {session: false
   Movies.findOne({ 'Genre.name': req.params.Name})
   .then((movies) => {
     if(movies) {
-      res.status(200).json(movies.Genre);
+      res.json(movies.Genre);
     } else {
       res.status(400).send('Genre Not Found!');
-    };
+    }
   })
   .catch((err) => {
     res.status(500).send('Error ' + err);
-  });
+  })
 });
 
 app.get('/movies/director/:directorName', passport.authenticate('jwt', {session: false}), (req, res) => {
   Movies.findOne({ 'Director.name': req.params.Name })//allows you to search for a director by name!
   .then((movies) => {
     if(movies){
-      res.status(200).json(movies.Director);
+      res.json(movies.Director);
     } else {
       res.status(400).send('Director Not Found!');
-    };
+    }
   })
   .catch((err) => {
     res.status(500).send('Error ' + err);
-  });
+  })
 });
 
 //Gwtting the Users!
 app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
   Users.find()
     .then((users) => {
-      res.status(200).json(users);
+      res.json(users);
     })
     .catch((err) => {
       console.error(err);
