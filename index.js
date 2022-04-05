@@ -165,7 +165,7 @@ app.delete(
 //This allows people to removed or deregister from the app
 // Delete a user by username
 app.delete(
-  "/users/:Username/",
+  "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
@@ -173,7 +173,7 @@ app.delete(
         if (!user) {
           res.status(400).send(req.params.Username + " was not found");
         } else {
-          res.status(204).end;
+          res.status(200).send(req.params.Username + " was deleted.");
         }
       })
       .catch((err) => {
@@ -193,15 +193,19 @@ app.get("/documentation", (req, res) => {
 });
 
 //READ!!!
-app.get("/movies", (req, res) => {
-  Movies.find()
-    .then((movies) => {
-      res.json(movies);
-    })
-    .catch((err) => {
-      res.status(500).send("Error: " + err);
-    });
-});
+app.get(
+  "/movies",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Movies.find()
+      .then((movies) => {
+        res.json(movies);
+      })
+      .catch((err) => {
+        res.status(500).send("Error: " + err);
+      });
+  }
+);
 
 app.get(
   "/movies/:Title",
