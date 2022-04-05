@@ -116,7 +116,7 @@ app.post(
 );
 //Update!! allow users to update their profile
 app.put(
-  "/users/:Username",
+  "/users/:username",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Users.findOneAndUpdate(
@@ -170,15 +170,27 @@ app.delete(
   (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
       .then((user) => {
-        if (!user) {
-          res.status(400).send(req.params.Username + " was not found");
+        if (user) {
+          res
+            .status(200)
+            .send(
+              "User with the username " +
+                req.params.Username +
+                " was successfully deleted."
+            );
         } else {
-          res.status(200).send(req.params.Username + " was deleted.");
+          res
+            .status(500)
+            .send(
+              "User with the username " +
+                req.params.Username +
+                " was not found."
+            );
         }
       })
       .catch((err) => {
         console.error(err);
-        res.status(500).send("Error: " + err);
+        res.status(500).send("Error " + err);
       });
   }
 );
