@@ -1,9 +1,9 @@
-const express = require("express"),
-  morgan = require("morgan");
-const app = express();
+const express = require("express");
+app = express();
+
+const morgan = require("morgan");
 //bodyParser, and uuid calls
-const bodyParser = require("body-parser"),
-  uuid = require("uuid");
+(bodyParser = require("body-parser")), (uuid = require("uuid"));
 methodOverride = require("method-override");
 
 //exporting of the mongoose!
@@ -23,10 +23,6 @@ mongoose.connect(process.env.CONNECTION_URI, {
 //USE Commands!!
 app.use(bodyParser.json());
 app.use(methodOverride());
-
-app.use((err, req, res, next) => {
-  // logic
-});
 
 app.use(morgan("common"));
 app.use(express.static("public"));
@@ -116,7 +112,7 @@ app.post(
 );
 //Update!! allow users to update their profile
 app.put(
-  "/users/:username",
+  "/users/:Username",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Users.findOneAndUpdate(
@@ -170,27 +166,15 @@ app.delete(
   (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
       .then((user) => {
-        if (user) {
-          res
-            .status(200)
-            .send(
-              "User with the username " +
-                req.params.Username +
-                " was successfully deleted."
-            );
+        if (!user) {
+          res.status(400).send(req.params.Username + " was not found");
         } else {
-          res
-            .status(500)
-            .send(
-              "User with the username " +
-                req.params.Username +
-                " was not found."
-            );
+          res.status(200).send(req.params.Username + ' was deleted.');
         }
       })
       .catch((err) => {
         console.error(err);
-        res.status(500).send("Error " + err);
+        res.status(500).send("Error: " + err);
       });
   }
 );
