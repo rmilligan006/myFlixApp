@@ -50,26 +50,26 @@
 
 ### Dependencies
 "dependencies": {
-    "bcrypt": "^5.0.1",
-    "body-parser": "^1.19.2",
-    "cors": "^2.8.5",
-    "express": "^4.17.3",
-    "express-validator": "^6.14.0",
-    "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.21",
-    "method-override": "^3.0.0",
-    "mongoose": "^6.2.4",
-    "morgan": "^1.10.0",
-    "passport": "^0.5.2",
-    "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0",
-    "uuid": "^8.3.2"
+   - "bcrypt": "^5.0.1",
+   - "body-parser": "^1.19.2",
+   - "cors": "^2.8.5",
+   - "express": "^4.17.3",
+   - "express-validator": "^6.14.0",
+   - "jsonwebtoken": "^8.5.1",
+   - "lodash": "^4.17.21",
+   - "method-override": "^3.0.0",
+   - "mongoose": "^6.2.4",
+   - "morgan": "^1.10.0",
+   - "passport": "^0.5.2",
+   - "passport-jwt": "^4.0.0",
+   - "passport-local": "^1.0.0",
+   - "uuid": "^8.3.2"
   },
   
 ### Technologies
 "devDependencies": {
-    "eslint": "^8.9.0",
-    "nodemon": "^2.0.15"
+   - "eslint": "^8.9.0",
+   - "nodemon": "^2.0.15"
   }
   
 
