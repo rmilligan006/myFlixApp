@@ -37,15 +37,15 @@
  
  ### Endpoints
  
- /
- /users
- /users/[Username]
- /users/[Username]/movies
- /users/[Username]/movies/[MovieID]
- /movies
- /movies/[Title]
- /genre/[Name]
- /directors/[Name]
+- /
+- /users
+- /users/[Username]
+- /users/[Username]/movies
+- /users/[Username]/movies/[MovieID]
+- /movies
+- /movies/[Title]
+- /genre/[Name]
+- /directors/[Name]
 
 
 ### Dependencies
