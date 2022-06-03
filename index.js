@@ -183,7 +183,7 @@ app.delete(
   }
 );
 
-//Get Commands!
+//Gets the homepage
 app.get("/", (req, res) => {
   res.send("Welcome to my movie app!");
 });
@@ -192,7 +192,7 @@ app.get("/documentation", (req, res) => {
   res.sendFile("public/documentation.html", { root: __dirname });
 });
 
-//READ!!!
+//gets all the movies
 app.get("/movies", (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -203,6 +203,8 @@ app.get("/movies", (req, res) => {
     });
 });
 
+
+//reads the movie title
 app.get(
   "/movies/:Title",
 
@@ -218,6 +220,7 @@ app.get(
   }
 );
 
+//reads the movies genre
 app.get(
   "/movies/genre/:genreName",
   passport.authenticate("jwt", { session: false }),
@@ -236,6 +239,7 @@ app.get(
   }
 );
 
+// reads the directors
 app.get(
   "/movies/director/:directorName",
   passport.authenticate("jwt", { session: false }),
